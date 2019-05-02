@@ -60,7 +60,7 @@ namespace Client
         private static void SignUp()
         {
             // 1. Create command
-            SignUp signUp = new SignUp("test@gmail.com", "Thomas", "Jaeger");
+            SignUp signUp = new SignUp("test@gmail.com", "Thomas", "Jaeger", "password");
 
             // 2. Send command to the Internet
             TheInternet.Enqueue(signUp);
