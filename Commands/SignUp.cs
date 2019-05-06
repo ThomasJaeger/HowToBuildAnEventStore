@@ -1,6 +1,8 @@
-﻿namespace Commands
+﻿using Shared;
+
+namespace Commands
 {
-    public class SignUp
+    public class SignUp : Command
     {
         public string Email { get; set; }
         public string FirstName { get; set; }

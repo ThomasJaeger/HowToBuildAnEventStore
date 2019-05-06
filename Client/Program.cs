@@ -1,5 +1,5 @@
 ﻿using Commands;
-using Shared;
+using FakeStuff;
 using System;
 
 namespace Client
@@ -64,6 +64,9 @@ namespace Client
 
             // 2. Send command to the Internet
             TheInternet.Enqueue(signUp);
+
+            // 3. Let the backend process the command
+            TheBackend.ProcessCommand();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Shared
+namespace FakeStuff
 {
     public sealed class TheInternet
     {
