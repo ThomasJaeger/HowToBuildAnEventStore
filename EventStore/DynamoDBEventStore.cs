@@ -25,12 +25,8 @@ namespace EventStore
 
         public DynamoDBEventStore()
         {
-            _tableAggregates = Environment.GetEnvironmentVariable("ENV") + "-" +
-                               Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION") + "-" +
-                               "Aggregates";
-            _tableChangeSets = Environment.GetEnvironmentVariable("ENV") + "-" +
-                               Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION") + "-" +
-                               "ChangeSets";
+            _tableAggregates = "Aggregates";
+            _tableChangeSets = "ChangeSets";
             Initialize();
         }
 
@@ -44,7 +40,6 @@ namespace EventStore
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                //Formatting = Formatting.Indented,
                 TypeNameHandling = TypeNameHandling.Objects
             };
         }
@@ -53,13 +48,9 @@ namespace EventStore
         {
             ChangesetDocument changeSet = null;
 
-            //            Console.WriteLine($"Saving domain events for {aggregateType} with aggregagteId {aggregateId}");
-            //            Console.WriteLine("newEvents: " + JsonConvert.SerializeObject(newEvents));
-
             try
             {
                 // First, check if the aggregagte has ever been stored before (the aggregagte's id rather)
-                //Console.WriteLine($"Checking if aggregateId '{aggregateId}' exists in method SaveEvents.");
                 if (AggregateExists(aggregateId))
                 {
                     // Get the latest changeset id
@@ -95,8 +86,6 @@ namespace EventStore
             {
                 Console.WriteLine(e);
             }
-
-            //            Console.WriteLine($"Completed saving domain events for {aggregateType} with aggregagteId {aggregateId}");
         }
 
         public List<Event> GetEventsForAggregate(string aggregateId)
@@ -112,7 +101,6 @@ namespace EventStore
             string changesetId = GetChangesetId(aggregateId);
             if (string.IsNullOrEmpty(changesetId))
             {
-                //Console.WriteLine($"Did not find a DynamoDbItemAggregate with aggregateId: {aggregateId}");
                 return events; // Did not find a DynamoDbItemAggregate
             }
 
@@ -120,14 +108,10 @@ namespace EventStore
             ChangesetDocument changeSet = GetChangeSet(changesetId);
             if (changeSet == null)
             {
-                //Console.WriteLine($"Did not find a changeset with itemAggregate.ChangesetId: {itemAggregate.ChangesetId}");
                 return events;
             }
 
             changeSetEvents = JsonConvert.DeserializeObject<List<Event>>(changeSet.Content);
-
-            //Console.WriteLine($"Found changeset events with itemAggregate.ChangesetId: {itemAggregate.ChangesetId}");
-            //Console.WriteLine("changeSetEvents: " + JsonConvert.SerializeObject(changeSetEvents));
 
             // Force adding events in correct order (don't use .AddRange)
             // Foreach loop is slower since it uses an indexer
@@ -138,6 +122,7 @@ namespace EventStore
             {
                 changeSet = GetChangeSet(changeSet.ParentChangesetId);
                 changeSetEvents = JsonConvert.DeserializeObject<List<Event>>(changeSet.Content);
+
                 // Foreach loop is slower since it uses an indexer
                 for (int i = 0; i < changeSetEvents.Count; i++)
                     tmp.Add(changeSetEvents[i]);
@@ -150,7 +135,6 @@ namespace EventStore
             // Put events in correct order
             for (int i = tmp.Count - 1; i >= 0; i--)
             {
-                //Console.WriteLine("Added domain event: " + JsonConvert.SerializeObject(tmp[i]));
                 events.Add(tmp[i]);
             }
 
@@ -178,11 +162,7 @@ namespace EventStore
                     }
                 };
 
-                //Console.WriteLine("About to execute query..." + request);
                 var response = _db.QueryAsync(request).Result;
-                //var response = Task.Run(() => _db.QueryAsync(request)).Result;  // https://stackoverflow.com/questions/17248680/await-works-but-calling-task-result-hangs-deadlocks
-                // var response = await _db.QueryAsync(request).ConfigureAwait(false);
-                //Console.WriteLine("Executed query with returned total item count: " + response.LayoutItems.Count);
                 return response.Items.Count > 0;
             }
             catch (AmazonDynamoDBException e)
@@ -249,13 +229,7 @@ namespace EventStore
                         { AGGREGATE_TYPE, new AttributeValue { S = aggregateType }}
                     }
                 };
-                //Task.Run(() => _db.PutItemAsync(request).Wait());
                 PutItemResponse response = _db.PutItemAsync(request).Result;
-
-                // Publishing events is optional, not really required since we want 
-                // the clients to subsribe via ATOM eventually
-                //Task.Run(() => PublishDomainEvents(newEvents));
-                //PublishDomainEvents(newEvents);  // We will utilize DynamoDB streams instead
             }
             catch (ConditionalCheckFailedException e)
             {
@@ -366,8 +340,6 @@ namespace EventStore
                     ConditionExpression = "attribute_not_exists(" + CHANGESET_ID + ")"
                 };
                 PutItemResponse response = _db.PutItemAsync(request).Result;
-                //PutItemResponse response = Task.Run(() => _db.PutItemAsync(request)).Result;
-                //Task.Run(() => _db.PutItemAsync(request)).Wait();
                 return true;
             }
             catch (ConditionalCheckFailedException e)
