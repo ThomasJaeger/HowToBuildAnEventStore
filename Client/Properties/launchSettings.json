@@ -3,7 +3,7 @@
     "Client": {
       "commandName": "Project",
       "environmentVariables": {
-        "ENV": "dev",
+        "CUSTOMER_ID": "3e66d3d9-2bcd-4b88-a7a5-ccca364bd7cc",
         "AWS_DEFAULT_REGION": "us-east-1"
       }
     }

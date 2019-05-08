@@ -40,7 +40,7 @@ namespace Domain
             Customer customer = _customerRepository.GetById(cmd.CustomerId.Id);
             Currency currency = Currency.ByAlphabeticCode(cmd.CurrencyCode);
             customer.Charge(new Money(cmd.Amount, currency), cmd.GetMessageCreateOptions());
-            _customerRepository.Save(customer, customer.CustomerId.Id, -1);
+            _customerRepository.Save(customer, customer.CustomerId.Id, customer.Version);
         }
     }
 }

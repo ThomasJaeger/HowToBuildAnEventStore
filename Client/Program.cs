@@ -7,10 +7,11 @@ namespace Client
 {
     class Program
     {
-        private static CustomerId _customerId;
+        private static string _customerId;
 
         static void Main(string[] args)
         {
+            _customerId = Environment.GetEnvironmentVariable("CUSTOMER_ID");
             ShowMenu();
             WaitForMenuSelection();
         }
@@ -72,8 +73,7 @@ namespace Client
             // 1. Create command
             MessageCreateOptions mco = new MessageCreateOptions();
             mco.Created = DateTime.Now;
-            _customerId = new CustomerId(Guid.NewGuid().ToString());
-            mco.CustomerId = _customerId;
+            mco.CustomerId = new CustomerId(_customerId);
 
             SignUp signUp = new SignUp(mco);
             signUp.Email = "test@gmail.com";
@@ -93,7 +93,7 @@ namespace Client
             // 1. Create command
             MessageCreateOptions mco = new MessageCreateOptions();
             mco.Created = DateTime.Now;
-            mco.CustomerId = _customerId;
+            mco.CustomerId = new CustomerId(_customerId);
 
             ChargeCustomer chargeCustomer = new ChargeCustomer(amount, mco);
 
