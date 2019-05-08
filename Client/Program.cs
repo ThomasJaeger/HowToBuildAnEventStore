@@ -1,11 +1,14 @@
 ﻿using Commands;
 using FakeStuff;
+using Shared;
 using System;
 
 namespace Client
 {
     class Program
     {
+        private static CustomerId _customerId;
+
         static void Main(string[] args)
         {
             ShowMenu();
@@ -19,6 +22,7 @@ namespace Client
             Console.WriteLine("How to build an event store sample client");
             Console.WriteLine("=========================================");
             Console.WriteLine("[1] Sign up");
+            Console.WriteLine("[2] Charge Customer $50");
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine("[?] Refresh menu");
             Console.WriteLine("[0] Exit");
@@ -36,6 +40,12 @@ namespace Client
                     case '1':
                         {
                             SignUp();
+                            PressAnyKey();
+                            break;
+                        }
+                    case '2':
+                        {
+                            ChargeCustomer(50);
                             PressAnyKey();
                             break;
                         }
@@ -60,7 +70,16 @@ namespace Client
         private static void SignUp()
         {
             // 1. Create command
-            SignUp signUp = new SignUp("test@gmail.com", "Thomas", "Jaeger", "password");
+            MessageCreateOptions mco = new MessageCreateOptions();
+            mco.Created = DateTime.Now;
+            _customerId = new CustomerId(Guid.NewGuid().ToString());
+            mco.CustomerId = _customerId;
+
+            SignUp signUp = new SignUp(mco);
+            signUp.Email = "test@gmail.com";
+            signUp.FirstName = "Thomas";
+            signUp.LastName = "Jaeger";
+            signUp.Password = "password";
 
             // 2. Send command to the Internet
             TheInternet.Enqueue(signUp);
@@ -68,5 +87,22 @@ namespace Client
             // 3. Let the backend process the command
             TheBackend.ProcessCommand();
         }
+
+        private static void ChargeCustomer(decimal amount)
+        {
+            // 1. Create command
+            MessageCreateOptions mco = new MessageCreateOptions();
+            mco.Created = DateTime.Now;
+            mco.CustomerId = _customerId;
+
+            ChargeCustomer chargeCustomer = new ChargeCustomer(amount, mco);
+
+            // 2. Send command to the Internet
+            TheInternet.Enqueue(chargeCustomer);
+
+            // 3. Let the backend process the command
+            TheBackend.ProcessCommand();
+        }
+
     }
 }

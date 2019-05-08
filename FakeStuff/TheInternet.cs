@@ -43,7 +43,7 @@ namespace FakeStuff
             Console.WriteLine(json);
         }
 
-        public static object Dequeue()
+        public static string Dequeue()
         {
             if (_instance._queue.Count > 0)
                 return _instance._queue.Dequeue();

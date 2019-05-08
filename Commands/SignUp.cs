@@ -1,4 +1,5 @@
-﻿using Shared;
+﻿using Newtonsoft.Json;
+using Shared;
 
 namespace Commands
 {
@@ -9,12 +10,13 @@ namespace Commands
         public string LastName { get; set; }
         public string Password { get; set; }
 
-        public SignUp(string email, string firstName, string lastName, string password)
+        [JsonConstructor]
+        protected SignUp()
         {
-            Email = email;
-            FirstName = firstName;
-            LastName = lastName;
-            Password = password;
+        }
+
+        public SignUp(MessageCreateOptions messageCreateOptions) : base(messageCreateOptions)
+        {
         }
     }
 }

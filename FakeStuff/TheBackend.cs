@@ -1,6 +1,7 @@
 ﻿using Domain;
 using EventStore;
 using Newtonsoft.Json;
+using Shared;
 
 namespace FakeStuff
 {
@@ -37,12 +38,9 @@ namespace FakeStuff
 
         public static void ProcessCommand()
         {
-            //string json = JsonConvert.SerializeObject(item, Formatting.Indented);
-            //_instance._queue.Enqueue(json);
-
-            //Console.WriteLine();
-            //Console.WriteLine("The Internet enqueued command:");
-            //Console.WriteLine(json);
+            string json = TheInternet.Dequeue();
+            Command cmd = JsonConvert.DeserializeObject<Command>(json);
+            _instance._commandHandlers.Handle(cmd);
         }
     }
 }

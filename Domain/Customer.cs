@@ -28,5 +28,10 @@ namespace Domain
             CustomerId = e.CustomerId;
             Created = e.Created;
         }
+
+        public void Charge(Money amount, MessageCreateOptions mco)
+        {
+            ApplyChange(new CustomerCharged(amount, mco));
+        }
     }
 }
