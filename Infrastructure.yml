@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Event Store DynamoDB Tables
+
+Resources:
+    dynamoTblEventStoreAggregates:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            AttributeDefinitions:
+                - AttributeName: AggregateId
+                  AttributeType: S
+            KeySchema:
+                - AttributeName: AggregateId
+                  KeyType: HASH
+            ProvisionedThroughput: 
+                ReadCapacityUnits: 5
+                WriteCapacityUnits: 1
+            TableName: Aggregates
+
+    dynamoTblEventStoreChangeSets:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            AttributeDefinitions:
+                - AttributeName: ChangeSetId
+                  AttributeType: S
+            KeySchema:
+                - AttributeName: ChangeSetId
+                  KeyType: HASH
+            ProvisionedThroughput: 
+                ReadCapacityUnits: 10
+                WriteCapacityUnits: 5
+            StreamSpecification:
+                StreamViewType: NEW_IMAGE
+            TableName: ChangeSets
+
+Outputs:
+    dynamoTblEventStoreChangeSetsStreamArn:
+        Description: EventStore ChangeSets Table Stream Arn
+        Value: !GetAtt dynamoTblEventStoreChangeSets.StreamArn
+        Export:
+            Name: global-eventstore-table-changesets-stream-arn

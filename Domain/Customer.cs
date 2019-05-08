@@ -33,5 +33,10 @@ namespace Domain
         {
             ApplyChange(new CustomerCharged(amount, mco));
         }
+
+        private void Apply(CustomerCharged e)
+        {
+            AccountBalance = AccountBalance + e.Amount;
+        }
     }
 }

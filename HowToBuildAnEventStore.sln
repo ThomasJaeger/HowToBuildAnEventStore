@@ -11,14 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2002C07D-4A8B-40AE-BA06-F73D2A02D97D}"
 	ProjectSection(SolutionItems) = preProject
+		Infrastructure.yml = Infrastructure.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{4F681DF6-8340-4200-8308-91093A601048}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeStuff", "FakeStuff\FakeStuff.csproj", "{F82D7D5A-D981-489E-A454-287CF4475CFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeStuff", "FakeStuff\FakeStuff.csproj", "{F82D7D5A-D981-489E-A454-287CF4475CFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStore", "EventStore\EventStore.csproj", "{3746E49A-4C97-4B88-9229-C57B9EC32E0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStore", "EventStore\EventStore.csproj", "{3746E49A-4C97-4B88-9229-C57B9EC32E0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
