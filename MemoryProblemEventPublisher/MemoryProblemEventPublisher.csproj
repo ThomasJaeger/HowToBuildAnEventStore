@@ -10,8 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\EventStore\EventStore.csproj" />
-    <ProjectReference Include="..\MemoryProblemEventPublisher\MemoryProblemEventPublisher.csproj" />
   </ItemGroup>
 
 </Project>

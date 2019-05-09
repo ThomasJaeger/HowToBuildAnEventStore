@@ -9,10 +9,12 @@ namespace Domain
     public class CommandHandlers
     {
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IProblemEventPublisher _problemEventPublisher;
 
-        public CommandHandlers(IRepository<Customer> customerRepository)
+        public CommandHandlers(IRepository<Customer> customerRepository, IProblemEventPublisher problemEventPublisher)
         {
             _customerRepository = customerRepository;
+            _problemEventPublisher = problemEventPublisher;
         }
 
         public void Handle(Command cmd)
@@ -48,13 +50,36 @@ namespace Domain
 
             int version = customer.Version;  // should be version 0 since we only created a customer
 
-            // Execute aggregate root method
-            customer.Charge(new Money(cmd.Amount, currency), cmd.GetMessageCreateOptions());
+            try
+            {
+                // Execute aggregate root method
+                customer.Charge(new Money(cmd.Amount, currency), cmd.GetMessageCreateOptions());
 
-            // Commit all possible domain events created by customer
-            _customerRepository.Save(customer, customer.CustomerId.Id, version);
+                // Commit all possible domain events created by customer
+                _customerRepository.Save(customer, customer.CustomerId.Id, version);
 
-            // Customer is now at version 1, verify in Aggregates table
+                // Customer is now at version 1, verify in Aggregates table
+            }
+            catch (ConcurrencyException e)
+            {
+                ProblemOccured problemOccured = new ProblemOccured(cmd.GetMessageCreateOptions())
+                {
+                    Created = DateTime.Now,
+                    AggregateId = cmd.CustomerId.Id,
+                    AggregateType = "Customer",
+                    AggregateVersionInEventStore = _customerRepository.GetAggregateVersion(cmd.CustomerId.Id),
+                    AggregateVersionExpectedByClient = version,
+                    ProblemCode = ProblemCode.Concurrency,
+                    CommandIdThatTriggeredProblem = cmd.MessageId,
+                    CommandThatTriggeredProblem = JsonConvert.SerializeObject(cmd)
+                };
+                _problemEventPublisher.Publish(problemOccured);
+                Console.WriteLine(JsonConvert.SerializeObject(problemOccured));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Domain;
 using EventStore;
+using MemoryProblemEventPublisher;
 using Newtonsoft.Json;
 using Shared;
 
@@ -24,8 +25,9 @@ namespace FakeStuff
             };
 
             IEventStore eventStore = new DynamoDBEventStore();
+            IProblemEventPublisher problemEventPublisher = new MemoryPublisher();
 
-            _commandHandlers = new CommandHandlers(new Repository<Customer>(eventStore));
+            _commandHandlers = new CommandHandlers(new Repository<Customer>(eventStore), problemEventPublisher);
         }
 
         public static TheBackend Instance
