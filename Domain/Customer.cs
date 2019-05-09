@@ -7,7 +7,7 @@ namespace Domain
     public class Customer : AggregateRoot
     {
         public CustomerId CustomerId { get; private set; }
-        public Money AccountBalance { get; private set; }
+        public Money AccountBalance { get; private set; } = new Money(0, Currency.ByAlphabeticCode("USD"));
         public DateTime Created { get; private set; }
         public bool Delinquent { get; private set; }
         public string Description { get; private set; }
