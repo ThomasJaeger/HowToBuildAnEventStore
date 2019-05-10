@@ -124,7 +124,7 @@ namespace Client
             mco.Created = DateTime.Now;
             mco.CustomerId = new CustomerId(_customerId);
 
-            CreateCustomerSnapshot createCustomerSnapshot = new CreateCustomerSnapshot(mco);
+            CreateCustomerSnapshot createCustomerSnapshot = new CreateCustomerSnapshot(_customerId, mco);
 
             // 2. Send command to the Internet
             TheInternet.Enqueue(createCustomerSnapshot);

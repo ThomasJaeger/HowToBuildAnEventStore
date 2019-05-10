@@ -90,8 +90,9 @@ namespace Domain
             try
             {
                 Customer customer = _customerRepository.GetById(cmd.AggregateId);
+                int version = customer.Version;
                 customer.CreateSnapshot(cmd.GetMessageCreateOptions());
-                _customerRepository.Save(customer, customer.CustomerId.Id, customer.Version);
+                _customerRepository.Save(customer, customer.CustomerId.Id, version);
             }
             catch (ConcurrencyException e)
             {

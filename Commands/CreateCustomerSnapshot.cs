@@ -20,8 +20,9 @@ namespace Commands
         {
         }
 
-        public CreateCustomerSnapshot(MessageCreateOptions messageCreateOptions) : base(messageCreateOptions)
+        public CreateCustomerSnapshot(string aggregateId, MessageCreateOptions messageCreateOptions) : base(messageCreateOptions)
         {
+            AggregateId = aggregateId;
         }
     }
 }
