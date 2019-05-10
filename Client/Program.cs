@@ -95,7 +95,13 @@ namespace Client
             mco.Created = DateTime.Now;
             mco.CustomerId = new CustomerId(_customerId);
 
-            ChargeCustomer chargeCustomer = new ChargeCustomer(amount, mco);
+            // We did get some DTO from the ReadModel about the customer
+            // ...
+            // For testing purposes, we get the latest version of the aggregate
+            // from the backend.
+            int version = TheBackend.GetAggregateVersion(_customerId);
+
+            ChargeCustomer chargeCustomer = new ChargeCustomer(amount, version, mco);
 
             // 2. Send command to the Internet
             TheInternet.Enqueue(chargeCustomer);

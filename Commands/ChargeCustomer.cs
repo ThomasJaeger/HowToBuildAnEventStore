@@ -7,14 +7,17 @@ namespace Commands
     {
         public decimal Amount { get; set; }
         public string CurrencyCode { get; set; } = "USD";
+        public int ExpectedVersion { get; set; }
 
         [JsonConstructor]
         protected ChargeCustomer()
         {
         }
 
-        public ChargeCustomer(decimal amount, MessageCreateOptions messageCreateOptions) : base(messageCreateOptions)
+        public ChargeCustomer(decimal amount, int expectedVersion, MessageCreateOptions messageCreateOptions) : base(messageCreateOptions)
         {
+            Amount = amount;
+            ExpectedVersion = expectedVersion;
         }
     }
 }

@@ -48,44 +48,37 @@ namespace EventStore
         {
             ChangesetDocument changeSet = null;
 
-            try
+            // First, check if the aggregagte has ever been stored before (the aggregagte's id rather)
+            if (AggregateExists(aggregateId))
             {
-                // First, check if the aggregagte has ever been stored before (the aggregagte's id rather)
-                if (AggregateExists(aggregateId))
-                {
-                    // Get the latest changeset id
-                    string changesetId = GetChangesetId(aggregateId);
+                // Get the latest changeset id
+                string changesetId = GetChangesetId(aggregateId);
 
-                    // For performance reasons, we only need to load the head changeset first
-                    // to check for concurrency violation.
-                    ChangesetDocument headChangeSet = GetChangeSet(changesetId);
+                // For performance reasons, we only need to load the head changeset first
+                // to check for concurrency violation.
+                ChangesetDocument headChangeSet = GetChangeSet(changesetId);
 
-                    // If a concurrency violation exists, we abort the rest of the operation.
-                    // The client should catch the exception and retry the operation again.
-                    CheckForConcurrencyViolation(headChangeSet, expectedVersion);
+                // If a concurrency violation exists, we abort the rest of the operation.
+                // The client should catch the exception and retry the operation again.
+                CheckForConcurrencyViolation(headChangeSet, expectedVersion);
 
-                    // All good, commit all new domain events into a new changeset.
-                    // When new changeset was persisted successfully, update the
-                    // aggregate with the new changeset head id.
-                    changeSet = CreateNewChangeSet(aggregateId, newEvents, expectedVersion, aggregateType, headChangeSet);
-                }
-                else
-                {
-                    // Persist domain events for the first time. This changeset
-                    // won't have a parent.
-                    //Console.WriteLine($"aggregateId '{aggregateId}' does not exist. Trying to create a new changeset.");
-                    changeSet = CreateNewChangeSet(aggregateId, newEvents, expectedVersion, aggregateType);
-                }
-
-                if (SaveChangeSet(changeSet))
-                    // Just stores a rerefence to the latest changeset with the aggregagte's id
-                    // It does not store the actual aggregagte.
-                    SaveAggregate(changeSet, aggregateType, newEvents);
+                // All good, commit all new domain events into a new changeset.
+                // When new changeset was persisted successfully, update the
+                // aggregate with the new changeset head id.
+                changeSet = CreateNewChangeSet(aggregateId, newEvents, expectedVersion, aggregateType, headChangeSet);
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
+                // Persist domain events for the first time. This changeset
+                // won't have a parent.
+                //Console.WriteLine($"aggregateId '{aggregateId}' does not exist. Trying to create a new changeset.");
+                changeSet = CreateNewChangeSet(aggregateId, newEvents, expectedVersion, aggregateType);
             }
+
+            if (SaveChangeSet(changeSet))
+                // Just stores a rerefence to the latest changeset with the aggregagte's id
+                // It does not store the actual aggregagte.
+                SaveAggregate(changeSet, aggregateType, newEvents);
         }
 
         public List<Event> GetEventsForAggregate(string aggregateId)

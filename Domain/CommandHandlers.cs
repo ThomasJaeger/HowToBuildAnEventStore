@@ -48,7 +48,8 @@ namespace Domain
             // Create proper currency value based on USD passed from the client
             Currency currency = Currency.ByAlphabeticCode(cmd.CurrencyCode);
 
-            int version = customer.Version;  // should be version 0 since we only created a customer
+            //int version = customer.Version;  // should be version 0 since we only created a customer
+            int version = cmd.ExpectedVersion;
 
             try
             {
