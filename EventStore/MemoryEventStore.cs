@@ -41,10 +41,6 @@ namespace EventStore
         {
             Console.WriteLine("Initializing Memory Event Store.");
 
-            // Note: clients can not access data from other regions
-            // AWS recommends to create clients for each region
-            //_db = new AmazonDynamoDBClient(Amazon.RegionEndpoint.USEast1);
-
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 //Formatting = Formatting.Indented,

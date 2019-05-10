@@ -24,6 +24,7 @@ namespace Client
             Console.WriteLine("=========================================");
             Console.WriteLine("[1] Sign up");
             Console.WriteLine("[2] Charge Customer $50");
+            Console.WriteLine("[3] Create Customer Snapshot");
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine("[?] Refresh menu");
             Console.WriteLine("[0] Exit");
@@ -47,6 +48,12 @@ namespace Client
                     case '2':
                         {
                             ChargeCustomer(50);
+                            PressAnyKey();
+                            break;
+                        }
+                    case '3':
+                        {
+                            CreateCustomerSnapshot();
                             PressAnyKey();
                             break;
                         }
@@ -105,6 +112,22 @@ namespace Client
 
             // 2. Send command to the Internet
             TheInternet.Enqueue(chargeCustomer);
+
+            // 3. Let the backend process the command
+            TheBackend.ProcessCommand();
+        }
+
+        private static void CreateCustomerSnapshot()
+        {
+            // 1. Create command
+            MessageCreateOptions mco = new MessageCreateOptions();
+            mco.Created = DateTime.Now;
+            mco.CustomerId = new CustomerId(_customerId);
+
+            CreateCustomerSnapshot createCustomerSnapshot = new CreateCustomerSnapshot(mco);
+
+            // 2. Send command to the Internet
+            TheInternet.Enqueue(createCustomerSnapshot);
 
             // 3. Let the backend process the command
             TheBackend.ProcessCommand();

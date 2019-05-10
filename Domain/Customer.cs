@@ -38,5 +38,22 @@ namespace Domain
         {
             AccountBalance = AccountBalance + e.Amount;
         }
+
+        public void CreateSnapshot(MessageCreateOptions mco)
+        {
+            CustomerSnapshotCreated customerSnapshotCreated = new CustomerSnapshotCreated(AccountBalance, 
+                Delinquent, Description, Email, Created, new MessageCreateOptions(mco));
+            ApplyChange(customerSnapshotCreated);
+        }
+
+        private void Apply(CustomerSnapshotCreated e)
+        {
+            CustomerId = e.CustomerId;
+            AccountBalance = e.AccountBalance;
+            Delinquent = e.Delinquent;
+            Description = e.Description;
+            Email = e.Email;
+            Created = e.Created;
+        }
     }
 }

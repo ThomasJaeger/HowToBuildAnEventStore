@@ -25,6 +25,8 @@ namespace Domain
                 Handle((SignUp)cmd);
             else if (cmd is ChargeCustomer)
                 Handle((ChargeCustomer)cmd);
+            else if (cmd is CreateCustomerSnapshot)
+                Handle((CreateCustomerSnapshot)cmd);
             else
             {
                 Console.WriteLine("Could not determine the command type, is the class type included in the command?: " + JsonConvert.SerializeObject(cmd));
@@ -80,6 +82,39 @@ namespace Domain
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        public void Handle(CreateCustomerSnapshot cmd)
+        {
+            try
+            {
+                Customer customer = _customerRepository.GetById(cmd.AggregateId);
+                customer.CreateSnapshot(cmd.GetMessageCreateOptions());
+                _customerRepository.Save(customer, customer.CustomerId.Id, customer.Version);
+            }
+            catch (ConcurrencyException e)
+            {
+                ProblemOccured problemOccured = new ProblemOccured(cmd.GetMessageCreateOptions())
+                {
+                    Created = DateTime.Now,
+                    AggregateId = cmd.AggregateId,
+                    AggregateType = "Customer",
+                    AggregateVersionInEventStore = _customerRepository.GetAggregateVersion(cmd.AggregateId),
+                    AggregateVersionExpectedByClient = 0,
+                    ProblemCode = ProblemCode.Concurrency,
+                    CommandIdThatTriggeredProblem = cmd.MessageId,
+                    CommandThatTriggeredProblem = JsonConvert.SerializeObject(cmd)
+                };
+                _problemEventPublisher.Publish(problemOccured);
+                Console.WriteLine(JsonConvert.SerializeObject(problemOccured));
+                Console.WriteLine(e.StackTrace);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
     }
