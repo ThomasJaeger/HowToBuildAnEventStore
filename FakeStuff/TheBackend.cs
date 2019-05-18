@@ -25,8 +25,8 @@ namespace FakeStuff
                 TypeNameHandling = TypeNameHandling.Objects
             };
 
-            //IEventStore eventStore = new DynamoDBEventStore();
-            IEventStore eventStore = new MemoryEventStore();
+            IEventStore eventStore = new DynamoDBEventStore();
+            //IEventStore eventStore = new MemoryEventStore();
 
             _customerRepository = new Repository<Customer>(eventStore);
 

@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeStuff", "FakeStuff\Fake
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStore", "EventStore\EventStore.csproj", "{3746E49A-4C97-4B88-9229-C57B9EC32E0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryProblemEventPublisher", "MemoryProblemEventPublisher\MemoryProblemEventPublisher.csproj", "{77813D08-50E6-4230-9C1A-481F1B462B3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryProblemEventPublisher", "MemoryProblemEventPublisher\MemoryProblemEventPublisher.csproj", "{77813D08-50E6-4230-9C1A-481F1B462B3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain-event-publisher", "DomainEventPublisher\domain-event-publisher.csproj", "{08317C08-7992-4E7B-B393-CF9B464E7434}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{77813D08-50E6-4230-9C1A-481F1B462B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77813D08-50E6-4230-9C1A-481F1B462B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77813D08-50E6-4230-9C1A-481F1B462B3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08317C08-7992-4E7B-B393-CF9B464E7434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08317C08-7992-4E7B-B393-CF9B464E7434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08317C08-7992-4E7B-B393-CF9B464E7434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08317C08-7992-4E7B-B393-CF9B464E7434}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

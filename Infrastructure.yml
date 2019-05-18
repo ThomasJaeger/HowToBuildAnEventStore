@@ -2,6 +2,48 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Event Store DynamoDB Tables
 
 Resources:
+    # **********************************************************************
+    # IAM - Security
+    # **********************************************************************
+    iamLambdaFunctionExecution:
+        Type: AWS::IAM::Role
+        Properties:
+            RoleName: lambda-function-execution
+            AssumeRolePolicyDocument: 
+                Version: 2012-10-17
+                Statement:
+                    -   Effect: Allow
+                        Principal:
+                            Service:
+                                - lambda.amazonaws.com
+                        Action: 
+                            - sts:AssumeRole
+            Policies: 
+                -   PolicyName: LambdaFunctionExecutionPolicy
+                    PolicyDocument:
+                        Version: 2012-10-17
+                        Statement:
+                            -   Action: 
+                                    - "logs:*"
+                                    - "cloudwatch:*"
+                                    - "lambda:*"
+                                    - "dynamodb:*"
+                                    - "sns:*"
+                                    - "execute-api:*"
+                                Effect: Allow
+                                Resource: "*"
+
+    # **********************************************************************
+    # S3 - Buckets we need
+    # **********************************************************************
+    s3DeploymentArtifacts:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: howtobuildaneventstore-deployment-artifacts
+
+    # **********************************************************************
+    # DynamoDB - Tables
+    # **********************************************************************
     dynamoTblEventStoreAggregates:
         Type: AWS::DynamoDB::Table
         Properties:
@@ -32,9 +74,45 @@ Resources:
                 StreamViewType: NEW_IMAGE
             TableName: ChangeSets
 
+    # **********************************************************************
+    # SNS - Domain Events being broadcasted
+    # **********************************************************************
+    CustomerCharged:
+        Type: AWS::SNS::Topic
+        Properties: 
+            DisplayName: CustomerCharged
+            TopicName: CustomerCharged
+
+    CustomerSnapshotCreated:
+        Type: AWS::SNS::Topic
+        Properties: 
+            DisplayName: CustomerSnapshotCreated
+            TopicName: CustomerSnapshotCreated
+
+    ProblemOccured:
+        Type: AWS::SNS::Topic
+        Properties: 
+            DisplayName: ProblemOccured
+            TopicName: ProblemOccured
+
+    SignedUp:
+        Type: AWS::SNS::Topic
+        Properties: 
+            DisplayName: SignedUp
+            TopicName: SignedUp
+
+# **********************************************************************
+# Exports to be used by other CloudFormation scripts
+# **********************************************************************
 Outputs:
     dynamoTblEventStoreChangeSetsStreamArn:
         Description: EventStore ChangeSets Table Stream Arn
         Value: !GetAtt dynamoTblEventStoreChangeSets.StreamArn
         Export:
             Name: global-eventstore-table-changesets-stream-arn
+
+    iamLambdaFunctionExecution:
+        Description: Lambda Function Execution Arn
+        Value: !GetAtt iamLambdaFunctionExecution.Arn
+        Export:
+            Name: global-lambda-function-execution-arn

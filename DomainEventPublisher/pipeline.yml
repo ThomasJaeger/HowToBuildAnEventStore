@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Domain Event Publisher
+
+Resources:
+    # **********************************************************************
+    # Lambda
+    # **********************************************************************
+    Lambda:
+        Type: AWS::Lambda::Function
+        Properties:
+            FunctionName: domain-event-publisher
+            Handler: domain-event-publisher::domain_event_publisher.Function::FunctionHandler
+            Role: 
+                Fn::ImportValue: 
+                    global-lambda-function-execution-arn
+            Code:
+                S3Bucket: howtobuildaneventstore-deployment-artifacts
+                S3Key: domain-event-publisher.zip
+            Runtime: dotnetcore2.1
+            MemorySize: 256
+            Timeout: 60
+            Environment:
+                Variables:
+                    ACCOUNT: !Ref "AWS::AccountId"
+                    
+    # **********************************************************************
+    # DynamoDB
+    # **********************************************************************
+    LambdaFunctionEventSourceMapping:
+        Type: AWS::Lambda::EventSourceMapping
+        Properties:
+            BatchSize: 10
+            Enabled: true
+            EventSourceArn: 
+                Fn::ImportValue: 
+                    global-eventstore-table-changesets-stream-arn
+            FunctionName: !GetAtt Lambda.Arn
+            StartingPosition: LATEST

@@ -25,6 +25,7 @@ namespace Client
             Console.WriteLine("[1] Sign up");
             Console.WriteLine("[2] Charge Customer $50");
             Console.WriteLine("[3] Create Customer Snapshot");
+            Console.WriteLine("[4] Ad-Hoc Projection: Create Customer Summary");
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine("[?] Refresh menu");
             Console.WriteLine("[0] Exit");
@@ -54,6 +55,12 @@ namespace Client
                     case '3':
                         {
                             CreateCustomerSnapshot();
+                            PressAnyKey();
+                            break;
+                        }
+                    case '4':
+                        {
+                            CreateCustomerSummary();
                             PressAnyKey();
                             break;
                         }
@@ -133,5 +140,20 @@ namespace Client
             TheBackend.ProcessCommand();
         }
 
+        private static void CreateCustomerSummary()
+        {
+            // 1. Create command
+            MessageCreateOptions mco = new MessageCreateOptions();
+            mco.Created = DateTime.Now;
+            mco.CustomerId = new CustomerId(_customerId);
+
+            CreateCustomerSummary createCustomerSummary = new CreateCustomerSummary(mco);
+
+            // 2. Send command to the Internet
+            TheInternet.Enqueue(createCustomerSummary);
+
+            // 3. Let the backend process the command
+            TheBackend.ProcessCommand();
+        }
     }
 }

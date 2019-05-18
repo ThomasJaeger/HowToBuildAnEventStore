@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Shared;
 using System;
+using System.Collections.Generic;
 using TeixeiraSoftware.Finance;
 
 namespace Domain
@@ -27,6 +28,8 @@ namespace Domain
                 Handle((ChargeCustomer)cmd);
             else if (cmd is CreateCustomerSnapshot)
                 Handle((CreateCustomerSnapshot)cmd);
+            else if (cmd is CreateCustomerSummary)
+                Handle((CreateCustomerSummary)cmd);
             else
             {
                 Console.WriteLine("Could not determine the command type, is the class type included in the command?: " + JsonConvert.SerializeObject(cmd));
@@ -36,7 +39,7 @@ namespace Domain
         private void Handle(SignUp cmd)
         {
             // Create a new customer
-            Customer customer = new Customer(cmd.GetMessageCreateOptions());
+            Customer customer = new Customer(cmd.FirstName, cmd.LastName, cmd.Password, cmd.GetMessageCreateOptions());
 
             // Commit the customer object's domain event(s) into the event store
             _customerRepository.Save(customer, customer.CustomerId.Id, -1);  // Customer will be at version 0 after successfull commit into event store
@@ -117,6 +120,46 @@ namespace Domain
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public void Handle(CreateCustomerSummary cmd)
+        {
+            // Note: Get events from last snapshot only, if exists
+            List<Event> events = _customerRepository.GetEventsForAggregate(cmd.CustomerId.Id);
+
+            int totalCharges = 0;
+            Currency currency = Currency.ByAlphabeticCode("USD");
+            Money total = new Money(0, currency);
+
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------");
+            Console.WriteLine("                  Customer Summary");
+            Console.WriteLine("                  ----------------");
+
+            foreach (var e in events)
+            {
+                if (e is SignedUp)
+                {
+                    SignedUp evt = e as SignedUp;
+                    Console.WriteLine($"{evt.FirstName} {evt.Lastname}");
+                    Console.WriteLine($"Customer Id: {evt.CustomerId.Id}");
+                    Console.WriteLine();
+                    Console.WriteLine("Created                                         Amount");
+                    Console.WriteLine("------------------------------------------------------");
+                }
+
+                if (e is CustomerCharged)
+                {
+                    CustomerCharged evt = e as CustomerCharged;
+                    Console.WriteLine($"{evt.Created}                           {evt.Amount.Amount}");
+                    total = total + evt.Amount;
+                    totalCharges++;
+                }
+            }
+
+            Console.WriteLine("======================================================");
+            Console.WriteLine($"Total charges: {totalCharges},    Total Amount: {total.Amount}");
+            Console.WriteLine("======================================================");
         }
     }
 }
