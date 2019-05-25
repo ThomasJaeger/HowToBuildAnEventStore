@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: update-readmodel stack
+
+Parameters:
+    RepoName:
+        Type: String
+        Default: update-readmodel
+
+Resources:
+    # **********************************************************************
+    # Lambda
+    # **********************************************************************
+    Lambda:
+        Type: AWS::Lambda::Function
+        Properties:
+            FunctionName: !Sub ${RepoName}
+            Handler: !Sub ${RepoName}::update_readmodel.Function::FunctionHandler
+            Role: 
+                Fn::ImportValue: 
+                    !Sub global-iam-lambdafromsns-role-arn
+            Code:
+                S3Bucket: howtobuildaneventstore-deployment-artifacts
+                S3Key: !Sub ${RepoName}.zip
+            Runtime: dotnetcore2.1
+            MemorySize: 256
+            Timeout: 60
+            Environment:
+                Variables:
+                    ACCOUNT: !Ref "AWS::AccountId"
+                    MY_SQL_DB_CONNECTION_STRING: 
+                        Fn::ImportValue:
+                            !Sub global-mysql-connection-string
+
+    # **********************************************************************
+    # SNS Subscriptions
+    # **********************************************************************
+    SignedUp:
+        Type: AWS::SNS::Subscription
+        DependsOn: Lambda
+        Properties: 
+            Endpoint: !GetAtt Lambda.Arn
+            Protocol: lambda
+            TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:SignedUp
+
+    CustomerCharged:
+        Type: AWS::SNS::Subscription
+        DependsOn: Lambda
+        Properties: 
+            Endpoint: !GetAtt Lambda.Arn
+            Protocol: lambda
+            TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CustomerCharged
+
+    ProblemOccured:
+        Type: AWS::SNS::Subscription
+        DependsOn: Lambda
+        Properties: 
+            Endpoint: !GetAtt Lambda.Arn
+            Protocol: lambda
+            TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:ProblemOccured
+
+    CustomerSnapshotCreated:
+        Type: AWS::SNS::Subscription
+        DependsOn: Lambda
+        Properties: 
+            Endpoint: !GetAtt Lambda.Arn
+            Protocol: lambda
+            TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CustomerSnapshotCreated
+
+Outputs:
+    Lambda:
+        Description: Update ReadModel Lambda Arn
+        Value: !GetAtt Lambda.Arn
+        Export:
+            Name: !Sub global-lamba-updatereadmodel-arn

@@ -1,7 +1,11 @@
-﻿using Domain;
+﻿using System;
+using Domain;
 using EventStore;
 using MemoryProblemEventPublisher;
 using Newtonsoft.Json;
+using ReadModel.Interfaces;
+using ReadModel.MySql;
+using ReadModel.Queries;
 using Shared;
 
 namespace FakeStuff
@@ -12,6 +16,8 @@ namespace FakeStuff
 
         private CommandHandlers _commandHandlers;
         private Repository<Customer> _customerRepository;
+
+        private readonly IReadModelRepository _readModelRepository;
 
         // Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
         static TheBackend()
@@ -33,6 +39,8 @@ namespace FakeStuff
             IProblemEventPublisher problemEventPublisher = new MemoryPublisher();
 
             _commandHandlers = new CommandHandlers(_customerRepository, problemEventPublisher);
+
+            _readModelRepository = new MySqlRepository();
         }
 
         public static TheBackend Instance
@@ -53,6 +61,16 @@ namespace FakeStuff
         public static int GetAggregateVersion(string aggregateId)
         {
             return _instance._customerRepository.GetAggregateVersion(aggregateId);
+        }
+
+        public static string QueryCustomerDetails(QueryCustomerDetails query)
+        {
+            return _instance._readModelRepository.Handle(query);
+        }
+
+        public static string QueryCustomerList(QueryCustomerList query)
+        {
+            return _instance._readModelRepository.Handle(query);
         }
     }
 }

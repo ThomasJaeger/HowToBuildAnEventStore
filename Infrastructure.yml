@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Event Store DynamoDB Tables
+Description: Required AWS resources for "How to build an event store"
 
 Resources:
     # **********************************************************************
@@ -29,7 +29,6 @@ Resources:
                                     - "lambda:*"
                                     - "dynamodb:*"
                                     - "sns:*"
-                                    - "execute-api:*"
                                 Effect: Allow
                                 Resource: "*"
 

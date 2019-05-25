@@ -1,5 +1,6 @@
 ﻿using Commands;
 using FakeStuff;
+using ReadModel.Queries;
 using Shared;
 using System;
 
@@ -26,6 +27,8 @@ namespace Client
             Console.WriteLine("[2] Charge Customer $50");
             Console.WriteLine("[3] Create Customer Snapshot");
             Console.WriteLine("[4] Ad-Hoc Projection: Create Customer Summary");
+            Console.WriteLine("[5] Query Customer Details");
+            Console.WriteLine("[6] Query Customer List");
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine("[?] Refresh menu");
             Console.WriteLine("[0] Exit");
@@ -61,6 +64,18 @@ namespace Client
                     case '4':
                         {
                             CreateCustomerSummary();
+                            PressAnyKey();
+                            break;
+                        }
+                    case '5':
+                        {
+                            QueryCustomerDetails();
+                            PressAnyKey();
+                            break;
+                        }
+                    case '6':
+                        {
+                            QueryCustomerList();
                             PressAnyKey();
                             break;
                         }
@@ -154,6 +169,27 @@ namespace Client
 
             // 3. Let the backend process the command
             TheBackend.ProcessCommand();
+        }
+
+        private static void QueryCustomerDetails()
+        {
+            QueryCustomerDetails query = new QueryCustomerDetails();
+            query.CustomerId = "test@gmail.com";
+
+            string customerDetails = TheBackend.QueryCustomerDetails(query);
+
+            Console.WriteLine();
+            Console.WriteLine(customerDetails);
+        }
+
+        private static void QueryCustomerList()
+        {
+            QueryCustomerList query = new QueryCustomerList();
+
+            string customerList = TheBackend.QueryCustomerList(query);
+
+            Console.WriteLine();
+            Console.WriteLine(customerList);
         }
     }
 }

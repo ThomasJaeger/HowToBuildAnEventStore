@@ -5,16 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.16" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\EventStore\EventStore.csproj" />
-    <ProjectReference Include="..\MemoryProblemEventPublisher\MemoryProblemEventPublisher.csproj" />
     <ProjectReference Include="..\ReadModel.Interfaces\ReadModel.Interfaces.csproj" />
-    <ProjectReference Include="..\ReadModel.MySql\ReadModel.MySql.csproj" />
     <ProjectReference Include="..\ReadModel.Queries\ReadModel.Queries.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

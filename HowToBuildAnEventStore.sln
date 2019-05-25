@@ -23,7 +23,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStore", "EventStore\Ev
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryProblemEventPublisher", "MemoryProblemEventPublisher\MemoryProblemEventPublisher.csproj", "{77813D08-50E6-4230-9C1A-481F1B462B3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain-event-publisher", "DomainEventPublisher\domain-event-publisher.csproj", "{08317C08-7992-4E7B-B393-CF9B464E7434}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "domain-event-publisher", "DomainEventPublisher\domain-event-publisher.csproj", "{08317C08-7992-4E7B-B393-CF9B464E7434}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "update-readmodel", "update-readmodel\update-readmodel.csproj", "{366DD1A3-BDC6-4F8E-B245-2E7CDC70D1B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadModel.Interfaces", "ReadModel.Interfaces\ReadModel.Interfaces.csproj", "{00996924-AB4C-40BA-9636-502BCDF72450}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadModel.MySql", "ReadModel.MySql\ReadModel.MySql.csproj", "{9E580D86-2BF2-45AC-B73A-17EBAAE4174E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadModel.Queries", "ReadModel.Queries\ReadModel.Queries.csproj", "{EEAB0D8C-B5B8-4700-922E-11538574DE51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +71,22 @@ Global
 		{08317C08-7992-4E7B-B393-CF9B464E7434}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08317C08-7992-4E7B-B393-CF9B464E7434}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08317C08-7992-4E7B-B393-CF9B464E7434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{366DD1A3-BDC6-4F8E-B245-2E7CDC70D1B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{366DD1A3-BDC6-4F8E-B245-2E7CDC70D1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{366DD1A3-BDC6-4F8E-B245-2E7CDC70D1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{366DD1A3-BDC6-4F8E-B245-2E7CDC70D1B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00996924-AB4C-40BA-9636-502BCDF72450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00996924-AB4C-40BA-9636-502BCDF72450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00996924-AB4C-40BA-9636-502BCDF72450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00996924-AB4C-40BA-9636-502BCDF72450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E580D86-2BF2-45AC-B73A-17EBAAE4174E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E580D86-2BF2-45AC-B73A-17EBAAE4174E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E580D86-2BF2-45AC-B73A-17EBAAE4174E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E580D86-2BF2-45AC-B73A-17EBAAE4174E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEAB0D8C-B5B8-4700-922E-11538574DE51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEAB0D8C-B5B8-4700-922E-11538574DE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEAB0D8C-B5B8-4700-922E-11538574DE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEAB0D8C-B5B8-4700-922E-11538574DE51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
