@@ -72,10 +72,10 @@ namespace ReadModel.MySql
         {
             Console.WriteLine("Processing domain event " + JsonConvert.SerializeObject(e));
 
-            var sql = "select count(*) from customer where customer_id = '" + e.CustomerId.Id + "'";
+            var sql = "select count(*) from CustomerDetails where CustomerId = '" + e.CustomerId.Id + "'";
             if (RecordExists(sql, connection))
             {
-                Console.WriteLine("Customer already exists, customer id: " + e.CustomerId.Id);
+                Console.WriteLine("Customer already exists, CustomerId: " + e.CustomerId.Id);
                 return;
             }
 
