@@ -12,8 +12,8 @@ namespace ReadModel.MySql
 {
     public class MySqlRepository : IReadModelRepository
     {
-        private const string CONNECTION_STRING_NAME = "MY_SQL_DB_CONNECTION_STRING";
-        private const string DB_NAME = "readmodel";
+        // Make sure you set this correctly in the Client Visual Studio Project settings
+        private const string CONNECTION_STRING_NAME = "MY_SQL_DB_CONNECTION_STRING"; // This would be populated with the env variable of the Lambda
 
         public MySqlRepository()
         {
@@ -272,7 +272,7 @@ namespace ReadModel.MySql
                 var cmd = connection.CreateCommand();
                 try
                 {
-                    cmd.CommandText = "select * from CustomerList order by created desc limit 1000";
+                    cmd.CommandText = "select * from CustomerList order by LastName desc limit 1000";
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

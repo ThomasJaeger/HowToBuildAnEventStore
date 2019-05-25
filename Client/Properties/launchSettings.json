@@ -3,6 +3,7 @@
     "Client": {
       "commandName": "Project",
       "environmentVariables": {
+        "MY_SQL_DB_CONNECTION_STRING": "Server=readmodel.c6hyxtnbvfwk.us-east-1.rds.amazonaws.com; Port=3306; Database=readmodel; Uid=admin; Pwd=8F&3gkcFdtA*&Xv; Pooling=true;",
         "CUSTOMER_ID": "tomjones@test.com",
         "AWS_DEFAULT_REGION": "us-east-1"
       }
