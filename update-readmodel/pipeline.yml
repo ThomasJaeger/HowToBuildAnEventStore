@@ -17,7 +17,7 @@ Resources:
             Handler: !Sub ${RepoName}::update_readmodel.Function::FunctionHandler
             Role: 
                 Fn::ImportValue: 
-                    !Sub global-iam-lambdafromsns-role-arn
+                    global-lambda-function-execution-arn
             Code:
                 S3Bucket: howtobuildaneventstore-deployment-artifacts
                 S3Key: !Sub ${RepoName}.zip
