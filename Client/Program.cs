@@ -105,7 +105,7 @@ namespace Client
             mco.CustomerId = new CustomerId(_customerId);
 
             SignUp signUp = new SignUp(mco);
-            signUp.Email = "test@gmail.com";
+            signUp.Email = _customerId;
             signUp.FirstName = "Thomas";
             signUp.LastName = "Jaeger";
             signUp.Password = "password";
@@ -174,7 +174,7 @@ namespace Client
         private static void QueryCustomerDetails()
         {
             QueryCustomerDetails query = new QueryCustomerDetails();
-            query.CustomerId = "test@gmail.com";
+            query.CustomerId = _customerId;
 
             string customerDetails = TheBackend.QueryCustomerDetails(query);
 
