@@ -42,6 +42,15 @@ Resources:
             Protocol: lambda
             TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:SignedUp
 
+    SignedUpPermission:
+        Type: AWS::Lambda::Permission
+        DependsOn: Lambda
+        Properties:
+            Action: lambda:InvokeFunction
+            Principal: sns.amazonaws.com
+            SourceArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:SignedUp
+            FunctionName: !Sub ${RepoName}
+
     CustomerCharged:
         Type: AWS::SNS::Subscription
         DependsOn: Lambda
@@ -49,6 +58,15 @@ Resources:
             Endpoint: !GetAtt Lambda.Arn
             Protocol: lambda
             TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CustomerCharged
+
+    CustomerChargedPermission:
+        Type: AWS::Lambda::Permission
+        DependsOn: Lambda
+        Properties:
+            Action: lambda:InvokeFunction
+            Principal: sns.amazonaws.com
+            SourceArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CustomerCharged
+            FunctionName: !Sub ${RepoName}
 
     ProblemOccured:
         Type: AWS::SNS::Subscription
@@ -58,6 +76,15 @@ Resources:
             Protocol: lambda
             TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:ProblemOccured
 
+    ProblemOccuredPermission:
+        Type: AWS::Lambda::Permission
+        DependsOn: Lambda
+        Properties:
+            Action: lambda:InvokeFunction
+            Principal: sns.amazonaws.com
+            SourceArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:ProblemOccured
+            FunctionName: !Sub ${RepoName}
+
     CustomerSnapshotCreated:
         Type: AWS::SNS::Subscription
         DependsOn: Lambda
@@ -65,6 +92,15 @@ Resources:
             Endpoint: !GetAtt Lambda.Arn
             Protocol: lambda
             TopicArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CustomerSnapshotCreated
+
+    CustomerSnapshotCreatedPermission:
+        Type: AWS::Lambda::Permission
+        DependsOn: Lambda
+        Properties:
+            Action: lambda:InvokeFunction
+            Principal: sns.amazonaws.com
+            SourceArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CustomerSnapshotCreated
+            FunctionName: !Sub ${RepoName}
 
 Outputs:
     Lambda:
