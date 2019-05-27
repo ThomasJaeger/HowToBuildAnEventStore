@@ -27,7 +27,6 @@ Resources:
                                     - "logs:*"
                                     - "cloudwatch:*"
                                     - "lambda:*"
-                                    - "dynamodb:*"
                                     - "sns:*"
                                 Effect: Allow
                                 Resource: "*"
