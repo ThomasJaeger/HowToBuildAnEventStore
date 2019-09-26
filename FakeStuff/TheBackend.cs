@@ -31,8 +31,8 @@ namespace FakeStuff
                 TypeNameHandling = TypeNameHandling.Objects
             };
 
-            IEventStore eventStore = new DynamoDBEventStore();
-            //IEventStore eventStore = new MemoryEventStore();
+            //IEventStore eventStore = new DynamoDBEventStore();
+            IEventStore eventStore = new MemoryEventStore();
 
             _customerRepository = new Repository<Customer>(eventStore);
 
@@ -60,7 +60,7 @@ namespace FakeStuff
 
         public static int GetAggregateVersion(string aggregateId)
         {
-            return _instance._customerRepository.GetAggregateVersion(aggregateId);
+            return _instance._customerRepository.GetAggregateVersion(Aggregates.Customer, aggregateId);
         }
 
         public static string QueryCustomerDetails(QueryCustomerDetails query)
@@ -71,6 +71,11 @@ namespace FakeStuff
         public static string QueryCustomerList(QueryCustomerList query)
         {
             return _instance._readModelRepository.Handle(query);
+        }
+
+        public static string DisplayAllDomainEvents(string aggregateId)
+        {
+            return JsonConvert.SerializeObject(_instance._customerRepository.GetEventsForAggregate(Aggregates.Customer, aggregateId), Formatting.Indented);
         }
     }
 }

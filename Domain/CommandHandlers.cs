@@ -48,7 +48,7 @@ namespace Domain
         private void Handle(ChargeCustomer cmd)
         {
             // Get the customer from the event store
-            Customer customer = _customerRepository.GetById(cmd.CustomerId.Id);
+            Customer customer = _customerRepository.GetById(Aggregates.Customer, cmd.CustomerId.Id);
 
             // Create proper currency value based on USD passed from the client
             Currency currency = Currency.ByAlphabeticCode(cmd.CurrencyCode);
@@ -73,7 +73,7 @@ namespace Domain
                     Created = DateTime.Now,
                     AggregateId = cmd.CustomerId.Id,
                     AggregateType = "Customer",
-                    AggregateVersionInEventStore = _customerRepository.GetAggregateVersion(cmd.CustomerId.Id),
+                    AggregateVersionInEventStore = _customerRepository.GetAggregateVersion(Aggregates.Customer, cmd.CustomerId.Id),
                     AggregateVersionExpectedByClient = version,
                     ProblemCode = ProblemCode.Concurrency,
                     CommandIdThatTriggeredProblem = cmd.MessageId,
@@ -92,7 +92,7 @@ namespace Domain
         {
             try
             {
-                Customer customer = _customerRepository.GetById(cmd.AggregateId);
+                Customer customer = _customerRepository.GetById(Aggregates.Customer, cmd.AggregateId);
                 int version = customer.Version;
                 customer.CreateSnapshot(cmd.GetMessageCreateOptions());
                 _customerRepository.Save(customer, customer.CustomerId.Id, version);
@@ -104,7 +104,7 @@ namespace Domain
                     Created = DateTime.Now,
                     AggregateId = cmd.AggregateId,
                     AggregateType = "Customer",
-                    AggregateVersionInEventStore = _customerRepository.GetAggregateVersion(cmd.AggregateId),
+                    AggregateVersionInEventStore = _customerRepository.GetAggregateVersion(Aggregates.Customer, cmd.AggregateId),
                     AggregateVersionExpectedByClient = 0,
                     ProblemCode = ProblemCode.Concurrency,
                     CommandIdThatTriggeredProblem = cmd.MessageId,
@@ -125,7 +125,7 @@ namespace Domain
         public void Handle(CreateCustomerSummary cmd)
         {
             // Note: Get events from last snapshot only, if exists
-            List<Event> events = _customerRepository.GetEventsForAggregate(cmd.CustomerId.Id);
+            List<Event> events = _customerRepository.GetEventsForAggregate(Aggregates.Customer, cmd.CustomerId.Id);
 
             int totalCharges = 0;
             Currency currency = Currency.ByAlphabeticCode("USD");

@@ -9,10 +9,14 @@ namespace Client
     class Program
     {
         private static string _customerId;
+        private static string _tenantId;
+        private static string _userId;
 
         static void Main(string[] args)
         {
             _customerId = Environment.GetEnvironmentVariable("CUSTOMER_ID");
+            _tenantId = Environment.GetEnvironmentVariable("TENANT_ID");
+            _userId = _customerId;
             ShowMenu();
             WaitForMenuSelection();
         }
@@ -29,6 +33,7 @@ namespace Client
             Console.WriteLine("[4] Ad-Hoc Projection: Create Customer Summary");
             Console.WriteLine("[5] Query Customer Details");
             Console.WriteLine("[6] Query Customer List");
+            Console.WriteLine("[7] Display all domain events stored so far");
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine("[?] Refresh menu");
             Console.WriteLine("[0] Exit");
@@ -79,6 +84,12 @@ namespace Client
                             PressAnyKey();
                             break;
                         }
+                    case '7':
+                        {
+                            DisplayAllDomainEvents();
+                            PressAnyKey();
+                            break;
+                        }
                     case '?':
                         {
                             PressAnyKey();
@@ -103,6 +114,8 @@ namespace Client
             MessageCreateOptions mco = new MessageCreateOptions();
             mco.Created = DateTime.Now;
             mco.CustomerId = new CustomerId(_customerId);
+            mco.TenantId = new TenantId(_tenantId);
+            mco.UserId = new UserId(_userId);
 
             SignUp signUp = new SignUp(mco);
             signUp.Email = _customerId;
@@ -123,6 +136,8 @@ namespace Client
             MessageCreateOptions mco = new MessageCreateOptions();
             mco.Created = DateTime.Now;
             mco.CustomerId = new CustomerId(_customerId);
+            mco.TenantId = new TenantId(_tenantId);
+            mco.UserId = new UserId(_userId);
 
             // We did get some DTO from the ReadModel about the customer
             // ...
@@ -145,6 +160,8 @@ namespace Client
             MessageCreateOptions mco = new MessageCreateOptions();
             mco.Created = DateTime.Now;
             mco.CustomerId = new CustomerId(_customerId);
+            mco.TenantId = new TenantId(_tenantId);
+            mco.UserId = new UserId(_userId);
 
             CreateCustomerSnapshot createCustomerSnapshot = new CreateCustomerSnapshot(_customerId, mco);
 
@@ -161,6 +178,8 @@ namespace Client
             MessageCreateOptions mco = new MessageCreateOptions();
             mco.Created = DateTime.Now;
             mco.CustomerId = new CustomerId(_customerId);
+            mco.TenantId = new TenantId(_tenantId);
+            mco.UserId = new UserId(_userId);
 
             CreateCustomerSummary createCustomerSummary = new CreateCustomerSummary(mco);
 
@@ -191,5 +210,14 @@ namespace Client
             Console.WriteLine();
             Console.WriteLine(customerList);
         }
+
+        private static void DisplayAllDomainEvents()
+        {
+            string result = TheBackend.DisplayAllDomainEvents(_customerId);
+
+            Console.WriteLine();
+            Console.WriteLine(result);
+        }
+
     }
 }

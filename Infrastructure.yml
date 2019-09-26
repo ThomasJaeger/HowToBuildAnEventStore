@@ -1,6 +1,17 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Required AWS resources for "How to build an event store"
 
+Parameters:
+    Env:
+        Type: String
+        Default: dev
+        AllowedValues: 
+            -   dev
+            -   beta
+            -   prod
+            -   feature
+        Description: The deployment environment
+
 Resources:
     # **********************************************************************
     # IAM - Security
@@ -41,37 +52,49 @@ Resources:
             BucketName: howtobuildaneventstore-deployment-artifacts
 
     # **********************************************************************
-    # DynamoDB - Tables
+    # DynamoDB EventStore Table
     # **********************************************************************
-    dynamoTblEventStoreAggregates:
+    dynamoTblEventStore:
         Type: AWS::DynamoDB::Table
         Properties:
             AttributeDefinitions:
-                - AttributeName: AggregateId
+                - AttributeName: PK
                   AttributeType: S
+                - AttributeName: SK
+                  AttributeType: N
+                - AttributeName: Snapshot
+                  AttributeType: N
             KeySchema:
-                - AttributeName: AggregateId
+                - AttributeName: PK
                   KeyType: HASH
+                - AttributeName: SK
+                  KeyType: RANGE
             ProvisionedThroughput: 
                 ReadCapacityUnits: 5
-                WriteCapacityUnits: 1
-            TableName: Aggregates
-
-    dynamoTblEventStoreChangeSets:
-        Type: AWS::DynamoDB::Table
-        Properties:
-            AttributeDefinitions:
-                - AttributeName: ChangeSetId
-                  AttributeType: S
-            KeySchema:
-                - AttributeName: ChangeSetId
-                  KeyType: HASH
-            ProvisionedThroughput: 
-                ReadCapacityUnits: 10
                 WriteCapacityUnits: 5
             StreamSpecification:
                 StreamViewType: NEW_IMAGE
-            TableName: ChangeSets
+            TableName: !Sub ${Env}-${AWS::Region}-EventStore  # Make sure exports are updated if changed here
+            GlobalSecondaryIndexes: 
+                - 
+                    IndexName: "snapshotGSI"
+                    KeySchema: 
+                        - 
+                            AttributeName: "PK"
+                            KeyType: "HASH"
+                        - 
+                            AttributeName: "Snapshot"
+                            KeyType: "RANGE"
+                    Projection: 
+                        #NonKeyAttributes: 
+                        #    - "Snapshot"
+                        ProjectionType: "KEYS_ONLY"
+                    ProvisionedThroughput: 
+                        ReadCapacityUnits: "5"
+                        WriteCapacityUnits: "5"
+            Tags:
+                -   Key: environment
+                    Value: !Ref Env
 
     # **********************************************************************
     # SNS - Domain Events being broadcasted
@@ -105,10 +128,10 @@ Resources:
 # **********************************************************************
 Outputs:
     dynamoTblEventStoreChangeSetsStreamArn:
-        Description: EventStore ChangeSets Table Stream Arn
-        Value: !GetAtt dynamoTblEventStoreChangeSets.StreamArn
+        Description: EventStore Table Stream Arn
+        Value: !GetAtt dynamoTblEventStore.StreamArn
         Export:
-            Name: global-eventstore-table-changesets-stream-arn
+            Name: global-eventstore-table-stream-arn
 
     iamLambdaFunctionExecution:
         Description: Lambda Function Execution Arn

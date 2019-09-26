@@ -33,6 +33,6 @@ Resources:
             Enabled: true
             EventSourceArn: 
                 Fn::ImportValue: 
-                    global-eventstore-table-changesets-stream-arn
+                    global-eventstore-table-stream-arn
             FunctionName: !GetAtt Lambda.Arn
             StartingPosition: LATEST
