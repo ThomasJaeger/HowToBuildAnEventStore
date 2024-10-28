@@ -1,2 +1,10 @@
 # How to build an event store
-This is the source code for my online course "How to build an event store" using AWS DynamoDB, C#, and .NET Core. You can read more about the course at https://creatinggreatsoftware.teachable.com/
+This is the source code for my online course "How to build an event store" using AWS DynamoDB, C#, and .NET Core.
+
+Real-time communication and feedback to your customers are more important then ever. Customers have become used to immediate feedback on the actions they take in your software. It is very hard in create, read, update, and delete (CRUD) based applications to provide this sort of responsiveness that your customers are demanding. Event-based solutions that are based on CQRS, Event Sourcing, and Domain-Driven Design (DDD) can offer deep insides in real-time to your customers and to your business. More importantly, you won't loose data in an event-sourced solution when compared to CRUD-based solutions because your solution will be able to provide the context on why changes happened and record changes into an immutable log, the event store.
+
+In this course, you will learn about the importance of using domain events as your source of truth instead of pieces of data that are incomplete in CRUD-based applications. You will be able to tell stories on what happened when and why. You will be able to answer future questions by your customers and business even though you may not have all the requirements at hand when you design and build your event-sourced solution.
+
+At the very heart of your solution will be the event store. The event store is the source of truth in your entire solution. We will be building an event store in C#. NET and utilizing AWS DynamoDB as the persistence mechanism. However, the provided C# source code can easily be converted to Java or other languages. For the actual persistence, you could also use MySQL, PostgreSQL, MongoDB, and others. The C# code is abstracted so that can you can re-use it for specific persistence implementations. The concepts and code can work for on-premise, cloud only, or hybrid models. For an example read model implementation, we will be creating a read model using MySQL in AWS.
+
+Once you understand the power of even sourcing, you won't go back.
