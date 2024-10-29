@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>domain_event_publisher</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
-    <PackageReference Include="Amazon.Lambda.DynamoDBEvents" Version="1.1.0" />
-    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.6.0" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.101.57" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.3.0" />
+    <PackageReference Include="Amazon.Lambda.DynamoDBEvents" Version="3.1.1" />
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="2.2.4" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.402.5" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.400.41" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
